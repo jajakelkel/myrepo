@@ -30,8 +30,6 @@
 						cancelFallback();
 					}
 				});
-				window.addEventListener('pagehide', cancelFallback);
-				window.addEventListener('beforeunload', cancelFallback);
 
 				window.location.href = androidAppScheme;
 			} else if (isIos) {
