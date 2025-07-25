@@ -18,10 +18,10 @@
 				clearTimeout(fallbackTimer);
 			}
 
-			if (isAndroid || isIos) {
+			if (isAndroid) {
 				// Open the app and fallback to the store if app doesn't open
 				fallbackTimer = setTimeout(() => {
-					window.location.href = isAndroid ? androidUrl : iosUrl;
+					window.location.href = androidUrl;
 				}, timeout);
 
 				// Cancel the fallback if the user leaves the page (likely to the app)
@@ -33,7 +33,10 @@
 				window.addEventListener('pagehide', cancelFallback);
 				window.addEventListener('beforeunload', cancelFallback);
 
-				window.location.href = isAndroid ? androidAppScheme : iosAppScheme;
+				window.location.href = androidAppScheme;
+			} else if (isIos) {
+				// iOS will fail if the app is not installed, so best to redirect to the store where they can click to open if they already have it installed
+				window.location.href = iosUrl;
 			}
 		}
 	</script>
