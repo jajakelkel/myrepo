@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>App Redirect</title>
+    <script>
+		function openApp(androidAppScheme, androidUrl, iosAppScheme, iosUrl) {
+			const timeout = 3000;
+
+			const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+			const isAndroid = /android/i.test(userAgent);
+			const isIos = /ios|ipad|iphone|ipod/i.test(userAgent) && !window.MSStream;
+
+			let fallbackTimer = null;
+
+			function cancelFallback() {
+				clearTimeout(fallbackTimer);
+			}
+
+			if (isAndroid || isIos) {
+				// Open the app and fallback to the store if app doesn't open
+				fallbackTimer = setTimeout(() => {
+					window.location.href = isAndroid ? androidUrl : iosUrl;
+				}, timeout);
+
+				// Cancel the fallback if the user leaves the page (likely to the app)
+				document.addEventListener('visibilitychange', () => {
+					if (document.visibilityState === 'hidden') {
+						cancelFallback();
+					}
+				});
+				window.addEventListener('pagehide', cancelFallback);
+				window.addEventListener('beforeunload', cancelFallback);
+
+				window.location.href = isAndroid ? androidAppScheme : iosAppScheme;
+			}
+		}
+	</script>
+</head>
+<body onload="openApp('comtheperfectworkoutapp://open', 'https://play.google.com/store/apps/details?id=com.the_perfect_workout.app', 'comtheperfectworkoutapp://open', 'https://apps.apple.com/us/app/the-perfect-workout/id6472703889');">
+	<div id="marketing">
+		<h1>APPAPAPPAPAPP!</h1>
+		<p>Marketing speak and graphics and links and other cool stuff and and and and and goes here</p>
+		<p>Download on iOS here and on Android here. I would display the buttons here to make it prettier</p>
+	</div>
+</body>
+</html>
